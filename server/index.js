@@ -26,6 +26,10 @@ db.on('error', (error) => {
     console.log(error)
 })
 
+app.get("/", (req, res) => {
+    res.json({ message: "Welcome to Maia." });
+  });
+
 
 app.post('/product/add', (req, res) => {
     let newProduct = new productModel;
@@ -40,3 +44,14 @@ app.post('/product/add', (req, res) => {
       }
   })
 })
+
+app.delete('/deleteProduct/:id', (req, res) => {
+    let query = { _id: req.params.id }
+    productModel.deleteOne(query, (err) => {
+      if(err){
+        res.send("Error while deleting product")
+      }else{
+        res.send("product deleted")
+      }
+    })
+  })
