@@ -46,7 +46,27 @@ app.post('/product/add', (req, res) => {
 })
 
 
-app.get("/productFind/:title", function(req, res) {
+app.get("/productUsable", function(req, res) {
+    const quantity = req.params.quantity;
+    productModel.find().where('quantity').gt(0)
+    .then(data => {
+        if (!data)
+          res.status(404).send({ message: "No products" });
+        else res.send(data);
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .send({ message: "Error"});
+      });
+    });
+
+
+
+
+
+
+app.get("/productFind/:name", function(req, res) {
     productModel.find({ name: req.params.name }, function(err, foundProduct){
         if(err){
             res.redirect("/");
