@@ -67,15 +67,20 @@ app.get("/productUsable", function(req, res) {
 
 
 app.get("/productFind/:name", function(req, res) {
-    productModel.find({ name: req.params.name }, function(err, foundProduct){
-        if(err){
-            res.redirect("/");
-        } else {
-            // res.render("show", {productModel: foundProduct});
-            res.send("found");
-        }
-    });
-  });
+    productModel.find({ name: req.params.name })
+        .then(data => {
+            if (!data)
+              res.status(404).send({ message: "No products" });
+            else res.send(data);
+          })
+          .catch(err => {
+            res
+              .status(500)
+              .send({ message: "Error"});
+          });
+        });
+
+
 
 app.get("/product/all", function(req, res) {
     const name = req.query.name;
