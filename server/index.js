@@ -45,6 +45,35 @@ app.post('/product/add', (req, res) => {
   })
 })
 
+
+app.get("/productFind/:title", function(req, res) {
+    productModel.find({ name: req.params.name }, function(err, foundProduct){
+        if(err){
+            res.redirect("/");
+        } else {
+            // res.render("show", {productModel: foundProduct});
+            res.send("found");
+        }
+    });
+  });
+
+app.get("/product/all", function(req, res) {
+    const name = req.query.name;
+    var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
+  
+    productModel.find(condition)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving tutorials."
+        });
+      });
+
+});
+
 app.delete('/deleteProduct/:id', (req, res) => {
     let query = { _id: req.params.id }
     productModel.deleteOne(query, (err) => {
