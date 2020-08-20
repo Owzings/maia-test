@@ -1,10 +1,12 @@
 const express = require('express');
-const cors = require('cors')
 const app = express();
+var cors = require('cors')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 let productModel = require('./product')
 
+
+app.use(cors())
 
 app.listen(3000, () => {
  console.log("Server started on port 3000")

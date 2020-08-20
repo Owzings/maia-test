@@ -19,7 +19,9 @@
 import axios from "axios";
 export default {
   data: () => ({
-    newProduct: "",
+    name: "",
+    ean: "",
+    quantity: "",
   }),
   methods: {
     addProduct() {
