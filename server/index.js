@@ -111,4 +111,20 @@ app.delete('/deleteProduct/:id', (req, res) => {
         res.send("product deleted")
       }
     })
-  })
+  });
+
+
+app.delete('/deleteAllProducts', (req, res) => {  
+    productModel.deleteMany({})
+      .then(data => {
+        res.send({
+          message: `${data.deletedCount} Products were deleted`
+        });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing all products."
+        });
+      });
+  });
