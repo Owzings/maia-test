@@ -31,6 +31,8 @@ app.get("/", (req, res) => {
   });
 
 
+
+//route to add a product
 app.post('/product/add', (req, res) => {
     let newProduct = new productModel;
     newProduct.name = req.body.name;
@@ -45,19 +47,19 @@ app.post('/product/add', (req, res) => {
   })
 })
 
-
+//route to get the products that are being used
 app.get("/productUsable", function(req, res) {
     const quantity = req.params.quantity;
     productModel.find().where('quantity').gt(0)
     .then(data => {
         if (!data)
-          res.status(404).send({ message: "No products" });
+          res.status(404).send({ message: "No products are used" });
         else res.send(data);
       })
       .catch(err => {
         res
           .status(500)
-          .send({ message: "Error"});
+          .send({ message: "Error 500"});
       });
     });
 
@@ -65,23 +67,23 @@ app.get("/productUsable", function(req, res) {
 
 
 
-
+//route to retrieve a product by its name
 app.get("/productFind/:name", function(req, res) {
     productModel.find({ name: req.params.name })
         .then(data => {
             if (!data)
-              res.status(404).send({ message: "No products" });
+              res.status(404).send({ message: "No products by that name were found" });
             else res.send(data);
           })
           .catch(err => {
             res
               .status(500)
-              .send({ message: "Error"});
+              .send({ message: "Error 500"});
           });
         });
 
 
-
+//route that retrieves all the products that exist
 app.get("/product/all", function(req, res) {
     const name = req.query.name;
     var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
@@ -93,12 +95,13 @@ app.get("/product/all", function(req, res) {
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while retrieving tutorials."
+            err.message || "Some error occurred while retrieving the products."
         });
       });
 
 });
 
+//route to delete a product by its id
 app.delete('/deleteProduct/:id', (req, res) => {
     let query = { _id: req.params.id }
     productModel.deleteOne(query, (err) => {
