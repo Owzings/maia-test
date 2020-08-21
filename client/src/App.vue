@@ -3,8 +3,9 @@
     <div class="d-flex justify-center">
       <h1 id="addProduct">Add Product</h1>
           <div class="d-flex justify-center">
-          &nbsp;&nbsp;&nbsp;
+          <v-col cols="1" style="margin: 0px auto;">
              <h2 v-if="!isHiddenText">Product was added</h2>
+            </v-col>
           </div>
     </div>
     <div class="d-flex justify-center">
@@ -32,7 +33,7 @@
       <v-list-item id="product-list-item" class="grow">
         <v-btn @click="editProduct(product._id)" class="mx-2" small
         color="green"> Edit </v-btn>
-       <v-btn @click="deleteProduct(product._id)" class="mx-2" small 
+       <v-btn @click="deleteProduct(product._id); isDeleted = true" class="mx-2" small 
        color="red"> Delete </v-btn>
       </v-list-item>
     </v-card-text>
@@ -40,15 +41,26 @@
 </div>
 </div>
 
+    <div class="d-flex justify-center">
+    <v-col cols="6" style="margin: 0px auto;">
+    <h1>Search a product</h1>
+    <v-text-field v-model="search" label="Search by name"></v-text-field>
+    </v-col>
+  </div>
+
+
   </v-app>
 </template>
 <script>
 import axios from "axios";
 export default {
   data: () => ({
+  search: "",
     isHiddenText: true, 
     isHiddenVue: true,
+    isDeleted: false,
     usableProducts: [],
+    filteredList: [],
     name: "",
     ean: "",
     quantity: "",
@@ -64,6 +76,8 @@ export default {
   axios
   .delete("http://localhost:3000/deleteProduct/" + ProductID).then(response => {
    console.log(response.data);
+   alert('Product was deleted');
+   window.location.reload();
   });
 },
   addProduct() {
@@ -73,6 +87,8 @@ export default {
         quantity: this.quantity
      }).then(response => {
        this.message = response.data;
+      window.location.reload();
+
      });
   }
 },
