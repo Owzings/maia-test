@@ -3,6 +3,7 @@
     <div class="d-flex justify-center">
       <h1 id="addProduct">Add Product</h1>
           <div class="d-flex justify-center">
+          &nbsp;&nbsp;&nbsp;
              <h2 v-if="!isHiddenText">Product was added</h2>
           </div>
     </div>
@@ -16,9 +17,12 @@
     <div class="d-flex justify-center">
       <v-btn @click="addProduct(); isHiddenText = false;" color="primary">Add Product</v-btn>
       <v-btn @click="created(); isHiddenVue = false;" color="primary">Display usable products</v-btn>
+      <v-btn @click="isHiddenVue = !isHiddenVue;" color="primary">Hide usable products</v-btn>
     </div>
 
-    <div v-if="!isHiddenVue" class="d-flex justify-center">
+
+<div v-if="!isHiddenVue">
+    <div class="d-flex justify-center">
   <h1>Usable products</h1>
 </div>
 <div v-for="product in usableProducts" :key="product._id">
@@ -33,6 +37,7 @@
       </v-list-item>
     </v-card-text>
   </v-card>
+</div>
 </div>
 
   </v-app>
@@ -54,6 +59,13 @@ export default {
     .then(response => (this.usableProducts = response.data))
     .catch(error => console.log(error));
     },
+
+  deleteProduct(ProductID) {
+  axios
+  .delete("http://localhost:3000/deleteProduct/" + ProductID).then(response => {
+   console.log(response.data);
+  });
+},
   addProduct() {
       axios.post("http://localhost:3000/product/add", {
         name: this.name,
