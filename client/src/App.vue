@@ -35,7 +35,8 @@
   <v-card class="mx-auto" color="white" dark max-width="800">
     <v-card-text class="font-weight-bold title blue--text">
     {{ product.name }} ///////
-    Quantity : {{ product.quantity }}
+    Quantity : {{ product.quantity }} //////
+    EAN : {{ product.ean }}
       <v-list-item id="product-list-item" class="grow">
         <v-text-field v-bind:value="product.quantity" label="Edit quantity" style="background-color: black;"></v-text-field>
         <v-btn @click="updateProduct(product._id);" class="mx-2" small
@@ -69,7 +70,7 @@ export default {
     computed: {
     filteredProducts: function(){
       return this.usableProducts.filter((product) => {
-        return product.name.toLowerCase().match(this.search.toLowerCase())
+        return product.name.toLowerCase().match(this.search.toLowerCase()) || product.ean.match(this.search)
       });
     }
   },
