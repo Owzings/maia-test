@@ -18,8 +18,11 @@ app.use(bodyParser.json());
 
 mongoose.connect("mongodb://localhost:27017/todoapp", {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
+
+
 var db = mongoose.connection;
 db.on('open', () => {
     console.log('Connected to mongoDB');
@@ -64,6 +67,50 @@ app.get("/productUsable", function(req, res) {
           .send({ message: "Error 500"});
       });
     });
+
+// app.post("/updateProduct/:id", function(req, res ) {
+//     productModel.findByIdAndUpdate(req.params.id, {
+//           $set: req.body
+//         }, (error, data) => {
+//           if (error) {
+//             return next(error);
+//           } else {
+//             res.send(data.quantity);
+//             console.log(data.quantity);
+//           }
+//         });
+//       });
+
+app.post("/updateProduct/:id", function(req, res ) {
+        productModel.findOneAndUpdate({ _id: req.params.id }, {
+              quantity: req.body.quantity
+            }, (error, data) => {
+              if (error) {
+                return next(error);
+              } else {
+                res.send(data);
+                console.log(data.quantity);
+              }
+            });
+          });
+     
+app.get("/productFindById/:id", function(req, res) {
+        productModel.findById({ _id: req.params.id })
+            .then(data => {
+                if (!data) {
+                  res.status(404).send({ message: "No products by that id were found" });
+
+                } else  {
+                    res.send(data);
+                    // res.json(data);
+                }
+              })
+              .catch(err => {
+                res
+                  .status(500)
+                  .send({ message: "Error 500"});
+              });
+            });    
 
 
 
