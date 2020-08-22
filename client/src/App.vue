@@ -26,7 +26,12 @@
     <div class="d-flex justify-center">
   <h1>Usable products</h1>
 </div>
-<div v-for="product in usableProducts" :key="product._id">
+    <div class="d-flex justify-center">
+    <v-col cols="6" style="margin: 0px auto;">
+    <input type="text" v-model="search" placeholder="Search Products" style="border: solid 1px black; width: 500px; " />
+      </v-col>
+  </div>
+<div v-for="product in filteredProducts" :key="product._id">
   <v-card class="mx-auto" color="white" dark max-width="800">
     <v-card-text class="font-weight-bold title blue--text">
     {{ product.name }} ///////
@@ -44,23 +49,6 @@
 </div>
 
 
-    <div class="d-flex justify-center">
-    <v-col cols="6" style="margin: 0px auto;">
-    <h1>Search a product</h1>
-    <v-text-field v-model="search" label="Search by name"></v-text-field>
-    </v-col>
-  </div>
-
-
-
-          <div v-if="!isHiddenForm">
-        <v-col cols="6" style="margin: 0px auto;">
-        <v-text-field v-model="quantity" label="Edit quantity" style="background-color: black;"></v-text-field>
-               <v-btn @click="deleteProduct(product._id)" class="mx-2" small 
-       color="blue"> {{ product.quantity }} </v-btn>
-        </v-col>
-        </div>
-
 
   </v-app>
 </template>
@@ -74,17 +62,25 @@ export default {
     isHiddenVue: true,
     isDeleted: false,
     usableProducts: [],
-    filteredList: [],
     name: "",
     ean: "",
     quantity: "",
   }),
+    computed: {
+    filteredProducts: function(){
+      return this.usableProducts.filter((product) => {
+        return product.name.toLowerCase().match(this.search.toLowerCase())
+      });
+    }
+  },
   methods: {
   created() {
     axios.get("http://localhost:3000/productUsable")
     .then(response => (this.usableProducts = response.data))
     .catch(error => console.log(error));
     },
+
+
 
   deleteProduct(ProductID) {
   axios
@@ -108,6 +104,7 @@ editProduct(ProductID) {
   });
 
 },
+
 
   addProduct() {
       axios.post("http://localhost:3000/product/add", {
